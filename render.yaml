@@ -1,0 +1,30 @@
+# Render Blueprint — Backend (Node.js + Express + TiDB)
+# https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: prueba-desarrollador-2026
+    env: node
+    region: oregon
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: 18
+      - key: PORT
+        value: "3001"
+      - key: DB_HOST
+        value: gateway01.us-east-1.prod.aws.tidbcloud.com
+      - key: DB_PORT
+        value: "4000"
+      - key: DB_USER
+        value: 3ssWM1R5t5UrDs8.root
+      - key: DB_PASSWORD
+        value: agIFFFWQkkc44Lau
+      - key: DB_NAME
+        value: event_landing
+      - key: FRONTEND_URL
+        value: https://frontend-eta-ashy-79.vercel.app

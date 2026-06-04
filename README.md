@@ -2,7 +2,17 @@
 
 Landing page interactiva para promocionar un evento digital, desarrollada como prueba técnica.
 
-**Stack:** React + Vite + Tailwind CSS (Frontend) · Node.js + Express + MySQL (Backend)
+**Stack:** React + Vite + Tailwind CSS (Frontend) · Node.js + Express + TiDB Serverless (Backend)
+
+---
+
+## 🌐 URLs de deploy
+
+| Servicio     | URL                                                    | Plataforma           |
+|--------------|--------------------------------------------------------|----------------------|
+| **Frontend** | https://frontend-eta-ashy-79.vercel.app                | Vercel               |
+| **Backend**  | https://prueba-desarrollador-2026.onrender.com         | Render (Web Service) |
+| **Base de datos** | TiDB Serverless (MySQL-compatible)                 | TiDB Cloud           |
 
 ---
 
@@ -11,49 +21,42 @@ Landing page interactiva para promocionar un evento digital, desarrollada como p
 | Herramienta | Versión (mínima) |
 |-------------|------------------|
 | Node.js     | 18.x             |
-| Docker      | 24.x (para MySQL) |
+| Docker      | 24.x (opcional, para MySQL local) |
 | npm         | 9.x              |
 
 ---
 
-## 📦 Instalación y ejecución
+## 📦 Instalación y ejecución local
 
-### 1. Levantar MySQL (con Docker)
+### Opción A: con TiDB Cloud (recomendado)
 
-```bash
-docker compose up -d
-```
-
-Esto inicia MySQL 8.0 en `localhost:3306` con:
-- DB: `event_landing`
-- User: `eventuser` / `eventpassword`
-- Tabla `registrations` creada automáticamente
-
-### 2. Backend
+Las credenciales de TiDB ya están en `backend/.env`. Solo necesitás:
 
 ```bash
+# Terminal 1 — Backend
 cd backend
-cp .env.example .env    # ya existe, pero revisá valores
 npm install
 npm run dev             # http://localhost:3001
-```
 
-Endpoints:
-- `GET  /api/health`      → health check
-- `POST /api/register`    → registrar asistente
-- `GET  /api/register`    → listar registros (para evaluar)
-
-### 3. Frontend
-
-En otra terminal:
-
-```bash
+# Terminal 2 — Frontend
 cd frontend
 npm install
 npm run dev             # http://localhost:5173
 ```
 
 El frontend tiene un proxy configurado: `/api` → `localhost:3001`.
+
+### Opción B: con MySQL local (Docker)
+
+```bash
+docker compose up -d    # MySQL en localhost:3306
+# Editá backend/.env → DB_HOST=localhost, DB_NAME=event_landing
+```
+
+Endpoints del backend:
+- `GET  /api/health`      → health check
+- `POST /api/register`    → registrar asistente
+- `GET  /api/register`    → listar registros (para evaluar)
 
 ---
 
@@ -117,15 +120,19 @@ event-landing/
 
 ---
 
-## 🧪 Probar el backend (sin frontend)
+## 🧪 Probar el backend en producción
 
 ```bash
-curl -X POST http://localhost:3001/api/register \
+# Health check
+curl https://prueba-desarrollador-2026.onrender.com/api/health
+
+# Registrar asistente
+curl -X POST https://prueba-desarrollador-2026.onrender.com/api/register \
   -H "Content-Type: application/json" \
   -d '{"name":"John Doe","email":"john@example.com","message":"I want to learn about web development"}'
 
-# Ver registros
-curl http://localhost:3001/api/register
+# Ver registros guardados
+curl https://prueba-desarrollador-2026.onrender.com/api/register
 ```
 
 ---

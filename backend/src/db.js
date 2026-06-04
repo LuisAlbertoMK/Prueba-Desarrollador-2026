@@ -15,6 +15,11 @@ const pool = mysql.createPool({
 
 /**
  * Initialize database — creates the registrations table if it doesn't exist.
+ * If table already exists (e.g. pre-created by the deploy pipeline),
+ * CREATE TABLE IF NOT EXISTS is a no-op, so this always succeeds.
+ *
+ * In restricted environments (e.g. TiDB Serverless without DDL grants),
+ * we catch the error and log a warning — the table should already exist.
  */
 const initDB = async () => {
   const connection = await pool.getConnection();
@@ -29,6 +34,11 @@ const initDB = async () => {
       )
     `);
     console.log('[DB] Registrations table ready');
+  } catch (err) {
+    // Table might already exist (pre-created), or DDL may be restricted.
+    // Either way, we continue — the app will fail later if the table is missing.
+    console.warn('[DB] Could not CREATE TABLE (may already exist):', err.message);
+    console.warn('[DB] Attempting to proceed — the table MUST exist or queries will fail.');
   } finally {
     connection.release();
   }
