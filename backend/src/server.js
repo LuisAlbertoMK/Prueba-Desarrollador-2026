@@ -35,19 +35,6 @@ app.get('/api/health', (_req, res) => {
   });
 });
 
-// DEBUG: inspect env vars (remove after deploy works)
-app.get('/api/debug', (_req, res) => {
-  res.json({
-    DB_HOST: process.env.DB_HOST || 'NOT SET',
-    DB_PORT: process.env.DB_PORT || 'NOT SET',
-    DB_USER: process.env.DB_USER || 'NOT SET',
-    DB_NAME: process.env.DB_NAME || 'NOT SET',
-    DB_PASSWORD_SET: !!process.env.DB_PASSWORD,
-    FRONTEND_URL: process.env.FRONTEND_URL || 'NOT SET',
-    NODE_ENV: process.env.NODE_ENV || 'NOT SET',
-  });
-});
-
 // Registration endpoints
 app.use('/api/register', registrationRouter);
 
@@ -59,12 +46,7 @@ app.use((_req, res) => {
 // Global error handler
 app.use((err, _req, res, _next) => {
   console.error('[SERVER ERROR]', err);
-  res.status(500).json({
-    success: false,
-    message: 'Internal server error',
-    error: err.message,
-    code: err.code || null,
-  });
+  res.status(500).json({ success: false, message: 'Internal server error' });
 });
 
 // --------------- Start ---------------
