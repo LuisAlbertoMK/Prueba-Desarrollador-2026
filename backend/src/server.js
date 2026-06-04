@@ -10,9 +10,21 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // --------------- Middleware ---------------
+// CORS — accept multiple origins via comma-separated FRONTEND_URL
+// Example: FRONTEND_URL="https://app.vercel.app,http://localhost:5173"
+const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:5173')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean);
+
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    origin: (origin, callback) => {
+      // Allow requests with no origin (e.g. mobile apps, curl, server-to-server)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      return callback(new Error(`Origin ${origin} not allowed by CORS`));
+    },
     methods: ['GET', 'POST'],
   })
 );
