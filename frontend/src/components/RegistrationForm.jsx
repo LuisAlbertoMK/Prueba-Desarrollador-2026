@@ -54,7 +54,7 @@ const RegistrationForm = () => {
     setSubmitting(true);
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || '';
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://prueba-desarrollador-2026.onrender.com';
       await axios.post(`${apiUrl}/api/register`, {
         name: form.name.trim(),
         email: form.email.trim(),
