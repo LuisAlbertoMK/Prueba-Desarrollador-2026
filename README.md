@@ -10,7 +10,7 @@ Landing page interactiva para promocionar un evento digital, desarrollada como p
 
 | Servicio     | URL                                                    | Plataforma           |
 |--------------|--------------------------------------------------------|----------------------|
-| **Frontend** | https://frontend-eta-ashy-79.vercel.app                | Vercel               |
+| **Frontend** | https://prueba-desarrollador-2026.vercel.app           | Vercel               |
 | **Backend**  | https://prueba-desarrollador-2026.onrender.com         | Render (Web Service) |
 | **Base de datos** | TiDB Serverless (MySQL-compatible)                 | TiDB Cloud           |
 
@@ -79,19 +79,22 @@ event-landing/
 │   │   ├── App.jsx
 │   │   ├── main.jsx
 │   │   └── index.css                # Animaciones + estilos globales
+│   ├── .env.production          # VITE_API_URL para producción
 │   ├── index.html
 │   ├── tailwind.config.js
+│   ├── vercel.json              # config de Vercel
 │   └── vite.config.js
-├── backend/                      # Node.js + Express + MySQL
+├── backend/                      # Node.js + Express + TiDB
 │   ├── src/
 │   │   ├── server.js             # Entry point + middleware
-│   │   ├── db.js                 # Pool de conexiones MySQL
+│   │   ├── db.js                 # Pool de conexiones TiDB
 │   │   ├── validation.js         # Validaciones con express-validator
 │   │   └── routes/
 │   │       └── registration.js   # CRUD de registrations
-│   ├── init.sql                  # Schema SQL
-│   └── .env.example
-├── docker-compose.yml            # MySQL 8.0
+│   ├── .env.render              # Credenciales TiDB (referencia)
+│   └── init.sql                  # Schema SQL
+├── render.yaml                  # Blueprint para Render
+├── docker-compose.yml            # MySQL 8.0 (alternativa local)
 └── README.md
 ```
 
@@ -126,14 +129,23 @@ event-landing/
 # Health check
 curl https://prueba-desarrollador-2026.onrender.com/api/health
 
-# Registrar asistente
+# Registrar asistente (esto es lo que hace el frontend al enviar el form)
 curl -X POST https://prueba-desarrollador-2026.onrender.com/api/register \
   -H "Content-Type: application/json" \
+  -H "Origin: https://prueba-desarrollador-2026.vercel.app" \
   -d '{"name":"John Doe","email":"john@example.com","message":"I want to learn about web development"}'
 
 # Ver registros guardados
 curl https://prueba-desarrollador-2026.onrender.com/api/register
 ```
+
+### Probar el flujo completo desde el browser
+
+1. Abrí https://prueba-desarrollador-2026.vercel.app
+2. Scrolleá hasta **Register Now**
+3. Llená el formulario (tenés 5 minutos antes que expire)
+4. Click **Register Now** → debería aparecer "🎉 You're Registered!"
+5. El registro queda guardado en TiDB
 
 ---
 
