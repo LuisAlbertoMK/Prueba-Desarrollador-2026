@@ -54,7 +54,8 @@ const RegistrationForm = () => {
     setSubmitting(true);
 
     try {
-      await axios.post('/api/register', {
+      const apiUrl = import.meta.env.VITE_API_URL || '';
+      await axios.post(`${apiUrl}/api/register`, {
         name: form.name.trim(),
         email: form.email.trim(),
         message: form.message.trim(),
